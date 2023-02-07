@@ -1,106 +1,78 @@
-import time
-import board
-import neopixel
-
-pixel_pin = board.GP22
-num_pixels = 16
-ORDER = neopixel.GRB
-
-pixels = neopixel.NeoPixel(
-    pixel_pin, 
-    num_pixels, 
-    brightness=1, 
-    auto_write=False, 
-    pixel_order=ORDER
-)
+from neopixel import Neopixel
+import utime
+from machine import Pin
+from ds1302 import DS1302
+ds = DS1302(Pin(18),Pin(17),Pin(16))
+#ds.date_time([2023, 2, 7, 0, 22, 23, 0, 0]) # set datetime.
+#ds.date_time() # returns the current datetime.
 
 
-def wheel(pos):
-    # Input a value 0 to 255 to get a color value.
-    # The colours are a transition r - g - b - back to r.
-    if pos < 0 or pos > 255:
-        r = g = b = 0
-    elif pos < 85:
-        r = int(pos * 3)
-        g = int(255 - pos * 3)
-        b = 0
-    elif pos < 170:
-        pos -= 85
-        r = int(255 - pos * 3)
-        g = 0
-        b = int(pos * 3)
-    else:
-        pos -= 170
-        r = 0
-        g = int(pos * 3)
-        b = int(255 - pos * 3)
-    return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
+
+numpix = 16
+strip = Neopixel(numpix, 0, 22, "GRB")
+red = (255, 0, 0)
+white = (255, 255, 255)
+strip.brightness(100)
 
 
-def rainbow_cycle(wait):
-    for j in range(255):
-        for i in range(num_pixels):
-            pixel_index = (i * 256 // num_pixels) + j
-            pixels[i] = wheel(pixel_index & 255)
-        pixels.show()
-        time.sleep(wait)
+blank = (0,0,0)
 
 
 def one(x):
     for i in range(0,2):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
     
 def two(x):
     for i in range(2,4):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
 
 def four(x):
     for i in range(4,6):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
 
 def eight(x):
     for i in range(6,8):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
 
 def sixteen(x):
     for i in range(8,10):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
 
 def thirtytwo(x):
     for i in range(10,12):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
 
 def sixtyfour(x):
     for i in range(12,14):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
 
 def onetwoeight(x):
     for i in range(14,16):
         if x == 1:
-            pixels[i] = (255, 255, 255)
+            strip.set_pixel(i, white)
         else:
-            pixels[i] = (255, 0, 0)
+            strip.set_pixel(i, red)
 
 
 def decToBinary(n):
@@ -145,11 +117,19 @@ def decToBinary(n):
         y = y - 1
     else:
         one(0)
-    pixels.show()
+    strip.show()
 
 count = 0
 
-while count < 256:
-    decToBinary(count)
-    time.sleep(1)
-    count = count + 1
+#while count < 256:
+    #decToBinary(count)
+    #utime.sleep(1)  
+    #count = count + 1
+    #if count == 256:
+        #count = 0
+while True:
+    decToBinary(ds.hour())
+    utime.sleep(5)
+    decToBinary(ds.minute())
+    utime.sleep(10)
+
