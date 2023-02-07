@@ -12,6 +12,7 @@ numpix = 16
 strip = Neopixel(numpix, 0, 22, "GRB")
 red = (255, 0, 0)
 white = (255, 255, 255)
+blue = (0,0,125)
 strip.brightness(100)
 
 
@@ -53,45 +54,51 @@ def sixteen(x):
         else:
             strip.set_pixel(i, red)
 
-def thirtytwo(x):
+def thirtytwo(x,hour,mins):
     for i in range(10,12):
         if x == 1:
             strip.set_pixel(i, white)
+        elif hour == True or mins == True:
+            strip.set_pixel(i, blue)
         else:
             strip.set_pixel(i, red)
 
-def sixtyfour(x):
+def sixtyfour(x,hour,mins):
     for i in range(12,14):
         if x == 1:
             strip.set_pixel(i, white)
+        elif hour == True or mins == True:
+            strip.set_pixel(i, blue)
         else:
             strip.set_pixel(i, red)
 
-def onetwoeight(x):
+def onetwoeight(x,hour,mins):
     for i in range(14,16):
         if x == 1:
             strip.set_pixel(i, white)
+        elif hour == True or mins == True:
+            strip.set_pixel(i, blue)
         else:
             strip.set_pixel(i, red)
 
 
-def decToBinary(n):
+def decToBinary(n, hour, mins):
     y = n
     if y >= 128:
         onetwoeight(1)
         y = y - 128
     else:
-        onetwoeight(0)
+        onetwoeight(0,hour,mins)
     if y >= 64:
         sixtyfour(1)
         y = y - 64
     else:
-        sixtyfour(0)
+        sixtyfour(0,hour,mins)
     if y >= 32:
-        thirtytwo(1)
+        thirtytwo(1,hour,mins)
         y = y - 32
     else:
-        thirtytwo(0)
+        thirtytwo(0,hour,mins)
     if y >= 16:
         sixteen(1)
         y = y - 16
@@ -128,8 +135,8 @@ count = 0
     #if count == 256:
         #count = 0
 while True:
-    decToBinary(ds.hour())
+    decToBinary(ds.hour(),True,False)
     utime.sleep(5)
-    decToBinary(ds.minute())
+    decToBinary(ds.minute(),False,True)
     utime.sleep(10)
 
