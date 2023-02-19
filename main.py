@@ -1,68 +1,113 @@
+from machine import I2C, Pin
+from Makerverse_RV3028 import Makerverse_RV3028
 from neopixel import Neopixel
 import utime
-from machine import Pin
-from ds1302 import DS1302
 
-ds = DS1302(Pin(18),Pin(17),Pin(16))
-#ds.date_time([2023, 2, 8, 0, 22, 31, 0, 0]) # set datetime.
-#ds.date_time() # returns the current datetime.
+i2c = I2C(0, sda = Pin(0), scl = Pin(1))
+rtc = Makerverse_RV3028(i2c = i2c)
 
+# Setting the time with list format
+# time = [10, 12, 3, 'AM'] # 10:12:03 AM, [HH:MM:SS 'AM/PM']
+# date = [10, 11, 21] # 10th November, 2021, [DD MM YY]
 
-numpix = 16
+# Setting the time with dictionary format
+#date = {}
+#date['day'] = 12
+#date['month'] = 2
+# Year can be "20xx" or "xx"
+#date['year'] = 2023
+
+#time = {}
+#time['hour'] = 10
+#time['min'] = 16
+#time['sec'] = 0
+# AM/PM indicator optional
+# If omitted, time is assumed to be in 24-hr format
+#time['ampm'] = 'PM' # or 'PM'
+
+#rtc.setTime(time)
+#rtc.setDate(date)
+hour = rtc.getTime()[0]
+mins = rtc.getTime()[1]
+print("hour: ", hour, " mins: ", mins )
+
+numpix = 64
 strip = Neopixel(numpix, 0, 22, "GRB")
 red = (255, 0, 0)
+
+off = (0,0,0)
+
 white = (255, 255, 255)
 blue = (0,0,50)
-strip.brightness(100)
-
-
-blank = (0,0,0)
-
+strip.brightness(200)
 
 def one(x):
-    for i in range(0,2):
+    for i in range(0,4):
+        if x == 1:
+            strip.set_pixel(i, white)
+    for i in range(60,64):
         if x == 1:
             strip.set_pixel(i, white)
     
 def two(x):
-    for i in range(2,4):
+    for i in range(4,8):
+        if x == 1:
+            strip.set_pixel(i, white)
+    for i in range(56,60):
         if x == 1:
             strip.set_pixel(i, white)
 
 def four(x):
-    for i in range(4,6):
+    for i in range(8,12):
+        if x == 1:
+            strip.set_pixel(i, white)
+    for i in range(52,56):
         if x == 1:
             strip.set_pixel(i, white)
 
 def eight(x):
-    for i in range(6,8):
+    for i in range(12,16):
+        if x == 1:
+            strip.set_pixel(i, white)
+    for i in range(48,52):
         if x == 1:
             strip.set_pixel(i, white)
 
 def sixteen(x):
-    for i in range(8,10):
+    for i in range(16,20):
+        if x == 1:
+            strip.set_pixel(i, white)
+    for i in range(44,48):
         if x == 1:
             strip.set_pixel(i, white)
 
 def thirtytwo(x):
-    for i in range(10,12):
+    for i in range(20,24):
+        if x == 1:
+            strip.set_pixel(i, white)
+    for i in range(40,44):
         if x == 1:
             strip.set_pixel(i, white)
 
 def sixtyfour(x):
-    for i in range(12,14):
+    for i in range(24,28):
+        if x == 1:
+            strip.set_pixel(i, white)
+    for i in range(36,40):
         if x == 1:
             strip.set_pixel(i, white)
 
 def onetwoeight(x):
-    for i in range(14,16):
+    for i in range(28,32):
         if x == 1:
             strip.set_pixel(i, white)
-            
+    for i in range(32,36):
+        if x == 1:
+            strip.set_pixel(i, white)
 
 def decToBinary(n):
     y = n
-    for i in range(16):
+    for i in range(64):
         strip.set_pixel(i, red)    
     if y >= 128:
         onetwoeight(1)
@@ -89,24 +134,27 @@ def decToBinary(n):
         one(1)
         y = y - 1
 
+
+
+utime.sleep(5)
+
 count = 0
 
-#while count < 256:
-    #decToBinary(count)
-    #utime.sleep(1)  
-    #count = count + 1
-    #if count == 256:
-        #count = 0
-while True:
-    print("hour: ",ds.hour())
-    decToBinary(ds.hour())
-    for i in range(10,16):
-        strip.set_pixel(i, blue)
+while count < 256:
+    decToBinary(count)
     strip.show()
-    utime.sleep(5)
-    print("minute: ",ds.minute())
-    decToBinary(ds.minute())
-    for i in range(12,16):
-        strip.set_pixel(i, blue)
-    strip.show()
-    utime.sleep(10)
+    utime.sleep(1)  
+    count = count + 1
+    if count == 256:
+        count = 0
+
+#for i in range(numpix):
+ #   strip.set_pixel(i, white)
+  #  strip.show()
+   # print(i)
+    #utime.sleep(0.2)
+    
+
+
+
+
