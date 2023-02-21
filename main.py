@@ -152,7 +152,7 @@ def showTime():
     decToBinary(rtc.getTime()[1])
     strip.show()
 
-    utime.sleep(55)
+    utime.sleep(10)
 
 while clock:
     showTime()
