@@ -39,99 +39,87 @@ off = (0,0,0)
 
 white = (255, 255, 255)
 blue = (0,0,50)
-strip.brightness(200)
+strip.brightness(50)
 
-def one(x):
+for i in range(numpix):
+    strip.set_pixel(i, off)
+strip.show()
+
+def one():
     for i in range(0,4):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(60,64):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     
-def two(x):
+def two():
     for i in range(4,8):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(56,60):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
 
-def four(x):
+def four():
     for i in range(8,12):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(52,56):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
 
-def eight(x):
+def eight():
     for i in range(12,16):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(48,52):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
 
-def sixteen(x):
+def sixteen():
     for i in range(16,20):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(44,48):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
 
-def thirtytwo(x):
+def thirtytwo():
     for i in range(20,24):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(40,44):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
 
-def sixtyfour(x):
+def sixtyfour():
     for i in range(24,28):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(36,40):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
 
-def onetwoeight(x):
+def onetwoeight():
     for i in range(28,32):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
     for i in range(32,36):
-        if x == 1:
-            strip.set_pixel(i, white)
+        strip.set_pixel(i, white)
 
 def decToBinary(n):
     y = n
-    for i in range(64):
+    for i in range(numpix):
         strip.set_pixel(i, red)    
     if y >= 128:
-        onetwoeight(1)
+        onetwoeight()
         y = y - 128
     if y >= 64:
-        sixtyfour(1)
+        sixtyfour()
         y = y - 64
     if y >= 32:
-        thirtytwo(1)
+        thirtytwo()
         y = y - 32
     if y >= 16:
-        sixteen(1)
+        sixteen()
         y = y - 16
     if y >= 8:
-        eight(1)
+        eight()
         y = y - 8
     if y >= 4:
-        four(1)
+        four()
         y = y - 4
     if y >= 2:
-        two(1)
+        two()
         y = y - 2
     if y >= 1:
-        one(1)
+        one()
         y = y - 1
 
 
@@ -147,14 +135,3 @@ while count < 256:
     count = count + 1
     if count == 256:
         count = 0
-
-#for i in range(numpix):
- #   strip.set_pixel(i, white)
-  #  strip.show()
-   # print(i)
-    #utime.sleep(0.2)
-    
-
-
-
-
