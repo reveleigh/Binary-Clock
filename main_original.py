@@ -39,12 +39,11 @@ off = (0,0,0)
 
 white = (255, 255, 255)
 blue = (0,0,50)
-strip.brightness(200)
+strip.brightness(50)
 
 for i in range(numpix):
     strip.set_pixel(i, off)
 strip.show()
-
 
 def one():
     for i in range(0,4):
@@ -95,7 +94,9 @@ def onetwoeight():
         strip.set_pixel(i, white)
 
 def decToBinary(n):
-    y = n   
+    y = n
+    for i in range(numpix):
+        strip.set_pixel(i, red)    
     if y >= 128:
         onetwoeight()
         y = y - 128
@@ -127,32 +128,10 @@ utime.sleep(5)
 
 count = 0
 
-clock = True
-def showTime():
-    #Set up hour
-    for i in range(numpix):
-        strip.set_pixel(i, red)     
-    for i in range(16,38):
-        strip.set_pixel(i, off)
-    for i in range(32,48):
-        strip.set_pixel(i, off)
-    decToBinary(rtc.getTime()[0])
+while count < 256:
+    decToBinary(count)
     strip.show()
-
-    
-    utime.sleep(5)
-    
-    #Set up minute
-    for i in range(numpix):
-        strip.set_pixel(i, red) 
-    for i in range(24,32):
-        strip.set_pixel(i, off)
-    for i in range(32,40):
-        strip.set_pixel(i, off)
-    decToBinary(rtc.getTime()[1])
-    strip.show()
-
-    utime.sleep(55)
-
-while clock:
-    showTime()
+    utime.sleep(1)  
+    count = count + 1
+    if count == 256:
+        count = 0
