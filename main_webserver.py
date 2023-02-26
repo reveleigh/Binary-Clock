@@ -1,3 +1,4 @@
+#import the libraries
 from machine import I2C, Pin
 from Makerverse_RV3028 import Makerverse_RV3028
 from neopixel import Neopixel
@@ -10,17 +11,20 @@ import tinyweb
 
 
 
-#Global variable to indicate whether O'Clock
-cuckooReady = True
-option = 0
+#Global variables
+#Is the Cuckoo clock ready to cuckoo?
+CUCKOO_READY = True
+
+#Set intial option to off
+OPTION = 0
 
 # Define SSID and password for the access point
-ssid = "Binary Clock"
-password = "123456789"
+SSID = "Binary Clock"
+PASSWORD = "123456789"
 
 # Define an access point, name it and then make it active
 ap = network.WLAN(network.AP_IF)
-ap.config(essid=ssid, password=password)
+ap.config(essid=SSID, password=PASSWORD)
 ap.active(True)
 
 # Wait until it is active
@@ -53,7 +57,8 @@ def set_clock():
 # Getting current hour and minute from RTC
 hour = rtc.getTime()[0]
 mins = rtc.getTime()[1]
-print("hour: ", hour, " mins: ", mins )
+sec = rtc.getTime()[2]
+print("hour: ", hour, " mins: ", mins, " secs: ", sec )
 
 # Setting up Neopixel object
 numpix = 64
@@ -64,11 +69,14 @@ white = (255, 255, 255)
 blue = (0,0,50)
 strip.brightness(200)
 
+#OPTION 0 is to turn off the LEDs
 # Turning off all the LEDs
 def turnOff():
+    global OPTION
     for i in range(numpix):
         strip.set_pixel(i, off)
     strip.show()
+    OPTION = 4
 turnOff()
 
 #Pause to allow program to be stopped before
@@ -94,7 +102,8 @@ def set_led_pattern(pattern, colour):
             for j in range(pixel_range[2], pixel_range[3]):
                 strip.set_pixel(j, colour)
 
-
+#This is cuckoo clock function
+#Displays a rainbow for 5 seconds and then turns off
 def rainbow():
     red = (255, 0, 0)
     orange = (255, 50, 0)
@@ -137,77 +146,102 @@ def rainbow():
 
 
 def showTime():
-    global cuckooReady
-    
-    #Set up hour
-    for i in range(numpix):
-        strip.set_pixel(i, red)     
-    for i in range(16,38):
-        strip.set_pixel(i, off)
-    for i in range(32,48):
-        strip.set_pixel(i, off)
-    set_led_pattern(rtc.getTime()[0],white)
-    strip.show()
+    global CUCKOO_READY
+    global OPTION
 
-    utime.sleep(5)
-    
-    #Set up minute
-    for i in range(numpix):
-        strip.set_pixel(i, red) 
-    for i in range(24,32):
-        strip.set_pixel(i, off)
-    for i in range(32,40):
-        strip.set_pixel(i, off)
-    set_led_pattern(rtc.getTime()[1],white)
-    strip.show()
-    utime.sleep(10)
     if rtc.getTime()[1] == 1:
-        cuckooReady = True
-        print(cuckooReady)
-    if rtc.getTime()[1] == 0 and cuckooReady:
-        rainbow()
-        cuckooReady = False
+            CUCKOO_READY = True
+            print(CUCKOO_READY)
+    if rtc.getTime()[1] == 0 and CUCKOO_READY == True:
+            rainbow()
+            CUCKOO_READY = False
+    
+    #Hour shown in the first 10 seconds of the minute
+    if rtc.getTime()[2] < 10:
+        for i in range(numpix):
+            strip.set_pixel(i, red)     
+        for i in range(16,38):
+            strip.set_pixel(i, off)
+        for i in range(32,48):
+            strip.set_pixel(i, off)
+        set_led_pattern(rtc.getTime()[0],white)
+        strip.show()
+    
+    #Minutes past shown if more than 10 seconds of the minutes have passed
+    else:
+        for i in range(numpix):
+            strip.set_pixel(i, red) 
+        for i in range(24,32):
+            strip.set_pixel(i, off)
+        for i in range(32,40):
+            strip.set_pixel(i, off)
+        set_led_pattern(rtc.getTime()[1],white)
+        strip.show()
 
+#OPTION 1 is the clock
+#Displays the time 
+def clock():
+    global OPTION
+    while True:
+        if OPTION == 1:
+            showTime()
+            time.sleep(1)
+        else:
+            break
 
+#OPTION 2 is the stopwatch
+#Counts up to 255 then resets
 def stopwatch():
     count = 0
+    global OPTION
     while count < 256:
-        for i in range(numpix):
-            strip.set_pixel(i, red)
-        set_led_pattern(count,white)
-        strip.show()
-        count += 1
-        utime.sleep(1)
-        if count == 256:
-            rainbow()
-            count = 0
+        if OPTION == 2:
+            for i in range(numpix):
+                strip.set_pixel(i, red)
+            set_led_pattern(count,white)
+            strip.show()
+            count += 1
+            utime.sleep(1)
+            if count == 256:
+                rainbow()
+                count = 0
+        else:
+            break
 
+#OPTION 3 is the timer
+#Countdown Timer from 255 to 0 then resets 
 def timer():
     count = 255
+    global OPTION
     while count > 0:
-        for i in range(numpix):
-            strip.set_pixel(i, red)
-        set_led_pattern(count,white)
-        strip.show()
-        count -= 1
-        utime.sleep(1)
-        if count == 0:
-            rainbow()
-            count = 255
+        if OPTION == 3:
+            for i in range(numpix):
+                strip.set_pixel(i, red)
+            set_led_pattern(count,white)
+            strip.show()
+            count -= 1
+            utime.sleep(1)
+            if count == 0:
+                rainbow()
+                count = 255
+        else:
+            break
+
 
 def options():
     while True:
         time.sleep(2)
-        if option == 0:
+        if OPTION == 0:
             turnOff()
-        elif option == 1:
-            showTime()
-        elif option == 2:
+        elif OPTION == 1:
+            clock()
+        elif OPTION == 2:
             stopwatch()
-        elif option == 3:
+        elif OPTION == 3:
             timer()
         else:
             pass
+        print(OPTION)
         
 # Start a new thread 
 _thread.start_new_thread(options,())
@@ -222,17 +256,54 @@ async def index(request, response):
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body><a href="/timer"><button>Timer</button></h1></body></html>\n')
+    await response.send('<html><body><a href="/off"><button>Turn LEDs Off</button></body></html>\n')
+    await response.send('<html><body><a href="/clock"><button>Binary Clock</button></body></html>\n')
+    await response.send('<html><body><a href="/timer"><button>Count Down Timer</button></body></html>\n')
+    await response.send('<html><body><a href="/stopwatch"><button>Stopwatch</button></body></html>\n')
     print("home")
 
-@app.route('/timer')
+@app.route('/off')
 async def index(request, response):
+    global OPTION
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body><a href="/"><button>Toggle LED</button></h1></body></html>\n')
+    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    OPTION = 0  
+    print("LEDs turned off")
 
-    print("timer")
+@app.route('/clock')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    OPTION = 1
+    print(OPTION)
+    print("Clock Mode")
+
+@app.route('/stopwatch')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    OPTION = 2 
+    print("Stopwatch Mode")
+
+@app.route('/timer')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    OPTION = 3 
+    print("Timer Mode")
+
+
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
@@ -240,6 +311,7 @@ app.run(host="0.0.0.0", port=80)
 
     
     
+
 
 
 
