@@ -9,8 +9,6 @@ import network
 import _thread
 import tinyweb
 
-
-
 #Global variables
 #Is the Cuckoo clock ready to cuckoo?
 CUCKOO_READY = True
@@ -42,7 +40,7 @@ rtc = Makerverse_RV3028(i2c = i2c)
 
 def set_clock():
     time = {}
-    time['hour'] = 8
+    time['hour'] = 10
     time['min'] = 55
     time['sec'] = 0
     # AM/PM indicator optional
@@ -256,11 +254,15 @@ async def index(request, response):
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body><a href="/off"><button>Turn LEDs Off</button></body></html>\n')
-    await response.send('<html><body><a href="/clock"><button>Binary Clock</button></body></html>\n')
-    await response.send('<html><body><a href="/timer"><button>Count Down Timer</button></body></html>\n')
-    await response.send('<html><body><a href="/stopwatch"><button>Stopwatch</button></body></html>\n')
+    await response.send('<html><body style="display:flex; flex-direction:column; justify-content:center; align-items:center;">')
+    await response.send('<a href="/off" style="margin-bottom:10px;"><button style="padding:10px;">Turn LEDs Off</button></a>')
+    await response.send('<a href="/clock" style="margin-bottom:10px;"><button style="padding:10px;">Binary Clock</button></a>')
+    await response.send('<a href="/timer" style="margin-bottom:10px;"><button style="padding:10px;">Count Down Timer</button></a>')
+    await response.send('<a href="/stopwatch"><button style="padding:10px;">Stopwatch</button></a>')
+    await response.send('</body></html>\n')
     print("home")
+
+
 
 @app.route('/off')
 async def index(request, response):
