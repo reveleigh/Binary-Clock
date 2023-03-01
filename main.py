@@ -74,7 +74,7 @@ def turnOff():
     for i in range(numpix):
         strip.set_pixel(i, off)
     strip.show()
-    OPTION = 4
+    OPTION = 10
 turnOff()
 
 #Pause to allow program to be stopped before
@@ -131,7 +131,7 @@ def rainbow():
     strip.set_pixel_line_gradient(current_pixel, numpix - 1, violet, red)
     
     start_time = time.time()  # record the start time
-    total_time = 5  # set the total time allowed in seconds
+    total_time = 10  # set the total time allowed in seconds
 
     while (time.time() - start_time) < total_time:
         strip.rotate_right(1)
@@ -202,17 +202,17 @@ def stopwatch():
             utime.sleep(1)
             if count == 256:
                 rainbow()
-                count = 0
         else:
             break
+    
 
 #OPTION 3 is the timer
 #Countdown Timer from 255 to 0 then resets 
-def timer():
-    count = 255
+def timer(x):
+    count = x
     global OPTION
     while count > 0:
-        if OPTION == 3:
+        if OPTION > 2 and OPTION != 0:
             for i in range(numpix):
                 strip.set_pixel(i, red)
             set_led_pattern(count,white)
@@ -221,9 +221,9 @@ def timer():
             utime.sleep(1)
             if count == 0:
                 rainbow()
-                count = 255
         else:
             break
+    
 
 
 def options():
@@ -236,7 +236,19 @@ def options():
         elif OPTION == 2:
             stopwatch()
         elif OPTION == 3:
-            timer()
+            timer(255)
+        elif OPTION == 4:
+            timer(10)
+        elif OPTION == 5:
+            timer(30)
+        elif OPTION == 6:
+            timer(60)
+        elif OPTION == 7:
+            timer(120)
+        elif OPTION == 8:
+            timer(180)
+        elif OPTION == 9:
+            timer(240)
         else:
             pass
         print(OPTION)
@@ -254,14 +266,30 @@ async def index(request, response):
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body style="display:flex; flex-direction:column; justify-content:center; align-items:center;">')
-    await response.send('<a href="/off" style="margin-bottom:10px;"><button style="padding:10px;">Turn LEDs Off</button></a>')
-    await response.send('<a href="/clock" style="margin-bottom:10px;"><button style="padding:10px;">Binary Clock</button></a>')
-    await response.send('<a href="/timer" style="margin-bottom:10px;"><button style="padding:10px;">Count Down Timer</button></a>')
-    await response.send('<a href="/stopwatch"><button style="padding:10px;">Stopwatch</button></a>')
-    await response.send('</body></html>\n')
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <h1 style="font-size: 4rem;"> Binary Clock</h1>
+                <h2 style="font-size: 3rem;">Choose an option:</h2>
+                <a href="/clock" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Binary Clock</button></a>
+                <a href="/timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Count Down Timer</button></a>
+                <a href="/stopwatch" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Stopwatch</button></a>
+                <a href="/10-second-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">10 Second Timer</button></a>     
+                <a href="/30-second-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">30 Second Timer</button></a>     
+                <a href="/1-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">1 Minute Timer</button></a>     
+                <a href="/2-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">2 Minute Timer</button></a>     
+                <a href="/3-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">3 Minute Timer</button></a>     
+                <a href="/4-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">4 Minute Timer</button></a>       
+                <a href="/off" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Turn LEDs Off</button></a>     
+           
+            </body>
+        </html>
+    ''')
     print("home")
-
 
 
 @app.route('/off')
@@ -270,7 +298,17 @@ async def index(request, response):
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
     OPTION = 0  
     print("LEDs turned off")
 
@@ -280,7 +318,17 @@ async def index(request, response):
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
     OPTION = 1
     print(OPTION)
     print("Clock Mode")
@@ -291,7 +339,17 @@ async def index(request, response):
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
     OPTION = 2 
     print("Stopwatch Mode")
 
@@ -301,13 +359,143 @@ async def index(request, response):
     # Start HTTP response with content-type text/html
     await response.start_html()
     # Send actual HTML page
-    await response.send('<html><body><a href="/"><button>Back</button></body></html>\n')
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
     OPTION = 3 
     print("Timer Mode")
 
+@app.route('/10-second-timer')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
+    OPTION = 4 
+    print("10 Second Timer")
 
+@app.route('/30-second-timer')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
+    OPTION = 5 
+    print("30 Second Timer")
+
+@app.route('/1-minute-timer')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
+    OPTION = 6
+    print("1 Minute Timer")
+
+@app.route('/2-minute-timer')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
+    OPTION = 7 
+    print("Two minute timer")
+
+@app.route('/3-minute-timer')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
+    OPTION = 8 
+    print("Three minute timer")
+
+@app.route('/4-minute-timer')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
+    OPTION = 9 
+    print("Four minute timer")
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
+
+
 
 
