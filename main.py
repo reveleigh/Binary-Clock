@@ -202,6 +202,7 @@ def stopwatch():
             utime.sleep(1)
             if count == 256:
                 rainbow()
+                OPTION = 0
         else:
             break
     
@@ -221,6 +222,7 @@ def timer(x):
             utime.sleep(1)
             if count == 0:
                 rainbow()
+                OPTION = 0
         else:
             break
     
@@ -284,7 +286,7 @@ async def index(request, response):
                 <a href="/2-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">2 Minute Timer</button></a>     
                 <a href="/3-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">3 Minute Timer</button></a>     
                 <a href="/4-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">4 Minute Timer</button></a>       
-                <a href="/off" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Turn LEDs Off</button></a>     
+                <a href="/off" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ff6666; color: black; border-radius: 15px;">Stop</button></a>     
            
             </body>
         </html>
@@ -495,7 +497,3 @@ async def index(request, response):
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
-
-
-
-
