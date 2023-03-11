@@ -227,7 +227,6 @@ def timer(x):
             break
     
 
-
 def options():
     while True:
         time.sleep(2)
@@ -237,23 +236,13 @@ def options():
             clock()
         elif OPTION == 2:
             stopwatch()
-        elif OPTION == 3:
-            timer(255)
-        elif OPTION == 4:
-            timer(10)
-        elif OPTION == 5:
-            timer(30)
-        elif OPTION == 6:
-            timer(60)
-        elif OPTION == 7:
-            timer(120)
-        elif OPTION == 8:
-            timer(180)
-        elif OPTION == 9:
-            timer(240)
+        elif OPTION in range(3, 10):
+            times = [255, 10, 30, 60, 120, 180, 240]
+            timer(times[OPTION-3])
         else:
             pass
         print(OPTION)
+
         
 # Start a new thread 
 _thread.start_new_thread(options,())
