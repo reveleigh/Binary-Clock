@@ -187,9 +187,9 @@ def clock():
         else:
             break
 
-#OPTION 2 is the stopwatch
+#OPTION 2 is the counter
 #Counts up to 255 then resets
-def stopwatch():
+def counter():
     count = 0
     global OPTION
     while count < 256:
@@ -235,7 +235,7 @@ def options():
         elif OPTION == 1:
             clock()
         elif OPTION == 2:
-            stopwatch()
+            counter()
         elif OPTION in range(3, 10):
             times = [255, 10, 30, 60, 120, 180, 240]
             timer(times[OPTION-3])
@@ -268,7 +268,7 @@ async def index(request, response):
                 <h2 style="font-size: 3rem;">Choose an option:</h2>
                 <a href="/clock" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Binary Clock</button></a>
                 <a href="/timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Count Down Timer</button></a>
-                <a href="/stopwatch" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Stopwatch</button></a>
+                <a href="/counter" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Counter</button></a>
                 <a href="/10-second-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">10 Second Timer</button></a>     
                 <a href="/30-second-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">30 Second Timer</button></a>     
                 <a href="/1-minute-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">1 Minute Timer</button></a>     
@@ -324,7 +324,7 @@ async def index(request, response):
     print(OPTION)
     print("Clock Mode")
 
-@app.route('/stopwatch')
+@app.route('/counter')
 async def index(request, response):
     global OPTION
     # Start HTTP response with content-type text/html
@@ -342,7 +342,7 @@ async def index(request, response):
         </html>
     ''')
     OPTION = 2 
-    print("Stopwatch Mode")
+    print("Counter Mode")
 
 @app.route('/timer')
 async def index(request, response):
