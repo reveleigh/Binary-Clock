@@ -147,7 +147,7 @@ def showTime():
     global CUCKOO_READY
     global OPTION
 
-    if rtc.getTime()[1] == 1:
+    if rtc.getTime()[1] == 10:
             CUCKOO_READY = True
             print(CUCKOO_READY)
     if rtc.getTime()[1] == 0 and CUCKOO_READY == True:
@@ -155,13 +155,11 @@ def showTime():
             CUCKOO_READY = False
     
     #Hour shown in the first 10 seconds of the minute
-    if rtc.getTime()[2] < 10:
+    if rtc.getTime()[2] < 30:
         for i in range(numpix):
             strip.set_pixel(i, red)     
-        for i in range(16,38):
-            strip.set_pixel(i, off)
-        for i in range(32,48):
-            strip.set_pixel(i, off)
+        for i in range(24,40):
+            strip.set_pixel(i, orange)
         set_led_pattern(rtc.getTime()[0],white)
         strip.show()
     
@@ -169,10 +167,8 @@ def showTime():
     else:
         for i in range(numpix):
             strip.set_pixel(i, red) 
-        for i in range(24,32):
-            strip.set_pixel(i, off)
-        for i in range(32,40):
-            strip.set_pixel(i, off)
+        for i in range(28,36):
+            strip.set_pixel(i, orange)
         set_led_pattern(rtc.getTime()[1],white)
         strip.show()
 
