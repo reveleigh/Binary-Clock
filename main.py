@@ -40,8 +40,8 @@ rtc = Makerverse_RV3028(i2c = i2c)
 
 def set_clock():
     time = {}
-    time['hour'] = 10
-    time['min'] = 55
+    time['hour'] = 5
+    time['min'] = 45
     time['sec'] = 0
     # AM/PM indicator optional
     # If omitted, time is assumed to be in 24-hr format
@@ -65,6 +65,7 @@ red = (255, 0, 0)
 off = (0,0,0)
 white = (255, 255, 255)
 blue = (0,0,50)
+orange = (255, 50, 0)
 strip.brightness(200)
 
 #OPTION 0 is to turn off the LEDs
