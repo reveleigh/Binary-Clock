@@ -1,7 +1,7 @@
 # Raspberry Pi Pico W Binary Clock
 Addressable LEDs illuminate eight binary bits in different combinations to display either the time or the status of various timers.
 
-Full project write up is here: 
+Full project write up is here: https://russelleveleigh.medium.com/striking-binary-clock-with-raspberry-pi-pico-w-and-addressable-rgb-leds-ee900a6d3cde
 
 Makes use the following sources:
 
