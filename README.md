@@ -3,7 +3,7 @@ Addressable LEDs illuminate eight binary bits in different combinations to displ
 
 Full project write up is here: https://russelleveleigh.medium.com/striking-binary-clock-with-raspberry-pi-pico-w-and-addressable-rgb-leds-ee900a6d3cde
 
-Makes use the following sources:
+Makes use of the following sources:
 
 Neopixel library: https://github.com/blaz-r/pi_pico_neopixel
 
