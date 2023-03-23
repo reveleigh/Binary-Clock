@@ -8,6 +8,7 @@ import socket
 import network
 import _thread
 import tinyweb
+import ujson
 
 #Global variables
 #Is the Cuckoo clock ready to cuckoo?
@@ -38,10 +39,10 @@ print(ap.ifconfig())
 i2c = I2C(0, sda = Pin(0), scl = Pin(1))
 rtc = Makerverse_RV3028(i2c = i2c)
 
-def set_clock():
+def set_clock(h,m):
     time = {}
-    time['hour'] = 5
-    time['min'] = 45
+    time['hour'] = h
+    time['min'] = m
     time['sec'] = 0
     # AM/PM indicator optional
     # If omitted, time is assumed to be in 24-hr format
@@ -50,7 +51,7 @@ def set_clock():
     rtc.setTime(time)
     #rtc.setDate(date)
 
-#set_clock()
+#set_clock(1,12)
 
 # Getting current hour and minute from RTC
 hour = rtc.getTime()[0]
@@ -264,6 +265,7 @@ async def index(request, response):
                 <h1 style="font-size: 4rem;"> Binary Clock</h1>
                 <h2 style="font-size: 3rem;">Choose an option:</h2>
                 <a href="/clock" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Binary Clock</button></a>
+                <a href="/set" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #E8D2D2; color: black; border-radius: 15px;">Set Time</button></a>
                 <a href="/timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Count Down Timer</button></a>
                 <a href="/counter" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Counter</button></a>
                 <a href="/10-second-timer" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">10 Second Timer</button></a>     
@@ -297,6 +299,7 @@ async def index(request, response):
             </body>
         </html>
     ''')
+    
     OPTION = 0  
     print("LEDs turned off")
 
@@ -320,6 +323,58 @@ async def index(request, response):
     OPTION = 1
     print(OPTION)
     print("Clock Mode")
+
+@app.route('/set')
+async def index(request, response):
+    global OPTION
+    # Start HTTP response with content-type text/html
+    await response.start_html()
+    # Send actual HTML page
+    await response.send('''
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Binary Clock</title>
+            </head>
+            <body style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 50px; font-family: verdana;">
+            <h1>Set the time</h1>
+            <body>
+                <form method="get">
+                 <label for="Hour" style="font-size: 4rem; margin-bottom: 10px;">Hour (AM/PM):</label>
+                 <input type="text" id="hour" name="hour" value="0" style="width: 100%; font-size: 4rem; padding: 10px; margin-bottom: 20px; border-radius: 5px; border: 2px solid #ccc;">
+                 <label for="Minute" style="font-size: 4rem; margin-bottom: 10px;">Minute:</label>
+                 <input type="text" id="minute" name="minute" value="0" style="width: 100%; font-size: 4rem; padding: 10px; margin-bottom: 20px; border-radius: 5px; border: 2px solid #ccc;">
+                 <div style="margin-bottom: 50px;"><input type="submit" value="Submit" style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;"></div>
+              </form>
+                <a href="/" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Home</button></a>
+            </body>
+        </html>
+    ''')
+    query_string = request.query_string.decode('utf-8')
+    pairs = query_string.split('&')
+
+    query_dict = {}
+
+    hour = None
+    minute = None
+
+    for pair in pairs:
+        key, value = pair.split('=')
+        key = ujson.loads(('"' + key.replace('%', '\\x') + '"').encode('utf-8'))
+        value = ujson.loads(('"' + value.replace('%', '\\x') + '"').encode('utf-8'))
+        query_dict[key] = value
+    
+    if "hour" in query_dict:
+        hour = int(query_dict["hour"])
+    if "minute" in query_dict:
+        minute = int(query_dict["minute"])
+
+    print("hour: ",hour, "minute: ", minute , " received")
+
+    if hour is not None and minute is not None:
+        set_clock(hour,minute)
+        print("Time set to: ", hour, ":", minute)
+
 
 @app.route('/counter')
 async def index(request, response):
