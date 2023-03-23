@@ -157,7 +157,7 @@ def showTime():
             CUCKOO_READY = False
     
     #Hour shown in the first 10 seconds of the minute
-    if rtc.getTime()[2] < 15 or rtc.getTime()[2] > 30 and rtc.getTime()[2] < 45:
+    if rtc.getTime()[2] < 30:
         for i in range(numpix):
             strip.set_pixel(i, red)     
         for i in range(24,40):
