@@ -326,38 +326,48 @@ async def index(request, response):
 
 @app.route('/set')
 async def index(request, response):
-    file = open("set-clock.html")
-    html = file.read()
-    file.close()
-    # Start HTTP response with content-type text/html
-    await response.start_html()
+    try:
+        # your existing code here
+        file = open("set-clock.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
 
-    # Send actual HTML page
-    await response.send(html)
-    query_string = request.query_string.decode('utf-8')
-    pairs = query_string.split('&')
+        # Send actual HTML page
+        await response.send(html)
+        query_string = request.query_string.decode('utf-8')
+        if query_string == "":
+            return
+        else:
+            pairs = query_string.split('&')
 
-    query_dict = {}
+            query_dict = {}
 
-    hour = None
-    minute = None
+            hour = None
+            minute = None
 
-    for pair in pairs:
-        key, value = pair.split('=')
-        key = ujson.loads(('"' + key.replace('%', '\\x') + '"').encode('utf-8'))
-        value = ujson.loads(('"' + value.replace('%', '\\x') + '"').encode('utf-8'))
-        query_dict[key] = value
+            for pair in pairs:
+                key, value = pair.split('=')
+                key = ujson.loads(('"' + key.replace('%', '\\x') + '"').encode('utf-8'))
+                value = ujson.loads(('"' + value.replace('%', '\\x') + '"').encode('utf-8'))
+                query_dict[key] = value
+            
+            if "hour" in query_dict:
+                hour = int(query_dict["hour"])
+            if "minute" in query_dict:
+                minute = int(query_dict["minute"])
+
+            print("hour: ",hour, "minute: ", minute , " received")
+
+            if hour is not None and minute is not None:
+                set_clock(hour,minute)
+                print("Time set to: ", hour, ":", minute)
+
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
     
-    if "hour" in query_dict:
-        hour = int(query_dict["hour"])
-    if "minute" in query_dict:
-        minute = int(query_dict["minute"])
-
-    print("hour: ",hour, "minute: ", minute , " received")
-
-    if hour is not None and minute is not None:
-        set_clock(hour,minute)
-        print("Time set to: ", hour, ":", minute)
 
 
 @app.route('/counter')
