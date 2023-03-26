@@ -149,7 +149,7 @@ def showTime():
     global CUCKOO_READY
     global OPTION
 
-    if rtc.getTime()[1] == 10:
+    if rtc.getTime()[1] > 1:
             CUCKOO_READY = True
             print(CUCKOO_READY)
     if rtc.getTime()[1] == 0 and CUCKOO_READY == True:
@@ -157,7 +157,7 @@ def showTime():
             CUCKOO_READY = False
     
     #Hour shown in the first 10 seconds of the minute
-    if rtc.getTime()[2] < 30:
+    if rtc.getTime()[2] < 15 or rtc.getTime()[2] > 30 and rtc.getTime()[2] < 45:
         for i in range(numpix):
             strip.set_pixel(i, red)     
         for i in range(24,40):
@@ -326,7 +326,7 @@ async def index(request, response):
 
 @app.route('/set')
 async def index(request, response):
-    file = open("set_clock.html")
+    file = open("set-clock.html")
     html = file.read()
     file.close()
     # Start HTTP response with content-type text/html
