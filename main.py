@@ -49,9 +49,6 @@ def set_clock(h,m):
     time['ampm'] = 'PM' # or 'PM'
 
     rtc.setTime(time)
-    #rtc.setDate(date)
-
-#set_clock(1,12)
 
 # Getting current hour and minute from RTC
 hour = rtc.getTime()[0]
@@ -156,7 +153,7 @@ def showTime():
             rainbow()
             CUCKOO_READY = False
     
-    #Hour shown in the first 10 seconds of the minute
+    # Alternate between displaying hour and minute every 15 seconds
     if rtc.getTime()[2] < 15 or rtc.getTime()[2] > 30 and rtc.getTime()[2] < 45:
         for i in range(numpix):
             strip.set_pixel(i, red)     
@@ -165,7 +162,6 @@ def showTime():
         set_led_pattern(rtc.getTime()[0],white)
         strip.show()
     
-    #Minutes past shown if more than 10 seconds of the minutes have passed
     else:
         for i in range(numpix):
             strip.set_pixel(i, red) 
@@ -206,7 +202,7 @@ def counter():
     
 
 #OPTION 3 is the timer
-#Countdown Timer from 255 to 0 then resets 
+#Countdown Timer from passed in value
 def timer(x):
     count = x
     global OPTION
@@ -248,8 +244,7 @@ _thread.start_new_thread(options,())
 # Start up a tiny web server
 app = tinyweb.webserver()
 
-# Serve a simple Hello World! response when / is called
-# and turn the LED on/off using toggle()
+# Serve homepage with options
 @app.route('/')
 async def index(request, response):
     # Start HTTP response with content-type text/html
