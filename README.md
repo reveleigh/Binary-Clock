@@ -2,7 +2,7 @@
 
 Addressable LEDs illuminate eight binary bits in different combinations to display either the time or the status of various timers.
 
-Full project write up is here: https://russelleveleigh.medium.com/striking-binary-clock-with-raspberry-pi-pico-w-and-addressable-rgb-leds-ee900a6d3cde
+Full project write up is here: [https://russelleveleigh.medium.com/striking-binary-clock-with-raspberry-pi-pico-w-and-addressable-rgb-leds](https://medium.com/geekculture/striking-binary-clock-with-raspberry-pi-pico-w-and-addressable-rgb-leds-ee900a6d3cde?sk=f91af28e5c5bc858a90e9300d8060f91)
 
 Makes use of the following sources:
 
